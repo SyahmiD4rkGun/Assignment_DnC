@@ -1,0 +1,22 @@
+{
+  "name":"blood_banking_system",
+  "version": "1.0.0",
+  "description": "BBS API",
+  "main": "main.js",
+  "engines": {
+    "node": "14.x"
+  },
+  "scripts": {
+    "start":"node main.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "api": "^4.4.0",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.18.1",
+    "mongodb": "^4.6.0"
+  },
+  "devDependencies": {
+    "supertest": "^6.2.3"
+  }
+}
