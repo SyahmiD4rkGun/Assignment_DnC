@@ -8,21 +8,12 @@ class User {
     static async register(username, password) {
         // TODO: Check if username exists
         const db = users
-            db
-            .find({ "name": username }, { $exists: true })
-            .toArray(function (err, doc) //find if a value exists
-            {
-                if (doc && doc.length) //if it does
-                {
-                    console.log(doc); // print out what it sends back
-
-                }
-                else // if it does not 
-                {
-                    console.log("Not in docs");
-
-                }
+        const user = await db.findOne({
+                "name": username
             })
+            if(user){
+                return false
+            }
         // TODO: Hash password
 
         const saltRounds = 10
@@ -50,21 +41,51 @@ class User {
             return
         }
 
-        const validate = bcrypt.compare(password,result2.password);
+        const validate = await bcrypt.compare(password,result2.password);
                     if (
-                        validate == false
+                        !validate
                     ) {
                         console.log('Invalid')
                         return false
                     }
-                    else{
-                        console.log('Verified')
-                        return true
-                    }
+        console.log('Verified')
+        return true
+                    
                 
 
-        // TODO: Return user object
-        return result2;
+        // TODO: Return user
+    }
+
+    static async update(username,password){
+        const db = users
+        const saltRounds = 10
+        const newPass = await bcrypt.hashSync(password, saltRounds)
+
+        const result3 = await db.findOne({"name" : username});
+        if(!result3){
+            return false
+        }
+        return await db.updateOne({
+            "name": username
+        },{
+            $set : {password : newPass}
+        })
+    }
+    static async delete(username,password){
+        const db = users
+        const result4 = await db.findOne({"name": username});
+        if(!result4){
+            return false
+        }
+        return await db.deleteOne({"name" : username })
+    }
+    static async check(username,password){
+        const db = users
+        const result5 = await db.findOne({"name": username});
+        if(!result5){
+            return false
+        }
+        return await result5
     }
 }
 
