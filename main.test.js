@@ -1,38 +1,83 @@
+const { response } = require('express');
+const req = require('express/lib/request');
 const supertest = require('supertest');
-const request = supertest('http://localhost:3000');
+const request = supertest('http://localhost:5000');
 
 describe('Express Route Test', function () {
-	it('should return hello world', async () => {
-		return request.get('/hello')
-			.expect(200)
-			.expect('Content-Type', /text/)
-			.then(res => {
-				expect(res.text).toBe('Hello BENR2423');
-			});
-	})
+	const data = {
+		name: 'azlan',
+		password: "1234"
+	}
 
-	it('login successfully', async () => {
+	it('create', async () => {
 		return request
-			.post('/login')
-			.send({username: 'user1', password: "123456" })
+			.post('/register')
+			.send(data)
 			.expect('Content-Type', /json/)
 			.expect(200).then(response => {
 				expect(response.body).toEqual(
-					expect.objectContaining({
-						// _id: expect.any(String),
-						// name: expect.any(String),
-						// age: expect.any(Number),
-					})
+					expect.objectContaining(
+						{
+							acknowledged : true
+	
+						}
+					)
 				);
 			});
 	});
 
-	it('login failed', async () => {
+	it('read', async () => {
+		return request
+		.get('/check')
+		.send(data)
+		.expect('Content-Type', /json/)
+		.expect(200).then(response => {
+			expect(response.body).toEqual(
+				expect.objectContaining(
+					{
+						name : expect.any(String),
+						password : expect.any(String)
+
+					}
+				)
+			)
+		})
 	})
 
-	it('register', async () => {
-	});
+	it('update', async () => {
+		return request
+			.patch('/update')
+			.send(data)
+			.expect('Content-Type', /json/)
+			.expect(200).then(response => {
+				expect(response.body).toEqual(
+					expect.objectContaining(
+						{
+							acknowledged : true
+	
+						}
+					)
+				);
+			});
 
-	it('register failed', async () => {
 	})
+
+	it('delete', async () => {
+		return request
+			.delete('/delete')
+			.send(data)
+			.expect('Content-Type', /json/)
+			.expect(200).then(response => {
+				expect(response.body).toEqual(
+					expect.objectContaining(
+						{
+							acknowledged : true
+	
+						}
+					)
+				);
+			});
+	})
+
+	
 });

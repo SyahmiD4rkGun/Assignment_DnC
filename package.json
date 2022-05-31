@@ -18,6 +18,8 @@
     "mongodb": "^4.6.0"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^2.2.2",
+    "jest": "^28.1.0",
     "supertest": "^6.2.3"
   }
 }
