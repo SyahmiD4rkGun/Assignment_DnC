@@ -14,14 +14,10 @@
     "api": "^4.4.0",
     "bcryptjs": "^2.4.3",
     "express": "^4.18.1",
-<<<<<<< HEAD
     "init": "^0.1.2",
-    "mongodb": "^4.6.0"
-=======
     "mongodb": "^4.6.0",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.4.0"
->>>>>>> 98bb66134160e292e26246233e041af806655022
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^2.2.2",
