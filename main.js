@@ -68,30 +68,7 @@ app.get('/', (req, res) => {
  */
 
 
-/**
- * @swagger
- * /check/{name}:
- *  get:
- *      description: Check User
- *      tags: [users]
- *      parameters:
- *          -in : path
- *          name: name
- *          schema:
- *            type: string
- *          required : true
- *          description: The User name
- *      responses:
- *          200:
- *              description: The user description by name
- *              contents:
- *                 application/json:
- *                      schema:
- *                          $ref: '#components/schemas/users'
- *          400:
- *              description: user not found
- * 
- */
+
 app.get('/check', async (req, res) => {
 	const user = await User.check(req.body.name,req.body.password)
 	res.json(user)
