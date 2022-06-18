@@ -24,7 +24,7 @@ const options = {
 	definition: {
 		openapi: '3.0.0',
 		info: {
-			title: 'Blood Banking Sytem',
+			title: 'Blood Banking System',
 			version: '1.0.0',
 		},
 	},
@@ -42,6 +42,61 @@ app.get('/', (req, res) => {
 	res.send('Hello World')
 })
 
+
+
+
+app.get('/check', async (req, res) => {
+	const user = await User.check(req.body.id,req.body.name, req.body.password,req.body.Email,req.body.details)
+	res.json(user)
+})
+
+app.post('/login', async (req, res) => {
+	console.log(req.body);
+
+
+	const user = await User.login(req.body.id,req.body.name, req.body.password,req.body.Email,req.body.details);
+	res.status(200).send(user)
+})
+
+app.post('/register', async (req, res) => {
+	//console.log(req.body);
+	const user = await User.register(req.body.id,req.body.name, req.body.password,req.body.Email,req.body.details);
+	res.json(user)
+
+})
+
+
+
+app.patch('/update', async (req,res) => {
+	const user = await User.update(req.body.id,req.body.name, req.body.password,req.body.Email,req.body.details)
+	res.json(user)
+})
+
+app.delete('/delete', async (req,res) => {
+	const user = await User.delete(req.body.id,req.body.name, req.body.password,req.body.Email,req.body.details)
+	res.json(user)
+})
+
+app.listen(port, () => {
+	console.log(`Example app listening on port ${port}`)
+})
+/**
+ * components:
+ *   schemas:
+ *     user:
+ *       type: object
+ *         properties:
+ *           id: 
+ *             type: integer
+ *           name: 
+ *             type: string
+ *           Email:
+ *             type: string
+ *           password: 
+ *             type: string
+ *           schema: 
+ *             $ref : "#/components/schemas/details"
+ */
 /**
  * @swagger
  * components:
@@ -57,69 +112,6 @@ app.get('/', (req, res) => {
  *             type: string
  *        
  */
-
-/**
- * @swagger
- * /check/{username}:
- *   get:
- *     description: Returns Array of the User
- *     parameters:
- *       - in: path
- *         name: username
- *         required: true
- *         schema:
- *             type: string
- *     responses:
- *       200:
- *         description: Search Found!
- *         schema:
- *           type: object
- *           properties:
- *             name: 
- *               type: string
- *             Email:
- *               type: string
- *             password: 
- *               type: string
- *             schema: 
- *               $ref : "#/components/schemas/details"
- *       401:
- *         description: Invalid username or password
- */
-
-app.get('/check/:username', async (req, res) => {
-	const user = await User.check(req.body.name, req.body.password,req.body.Email,req.body.details)
-	res.json(user)
-})
-/**
- * @swagger
- * /login:
- *   post:
- *     description: User Login
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema: 
- *             type: object
- *             properties:
- *               name: 
- *                 type: string
- *               password: 
- *                 type: string
- *     responses:
- *       200:
- *         description: Successful login
- *       401:
- *         description: Invalid username or password
- */
-app.post('/login', async (req, res) => {
-	console.log(req.body);
-
-
-	const user = await User.login(req.body.name, req.body.password,req.body.Email,req.body.details);
-	res.status(200).send(user)
-})
 /**
  * @swagger
  * /register:
@@ -132,13 +124,15 @@ app.post('/login', async (req, res) => {
  *           schema: 
  *             type: object
  *             properties:
+ *               id: 
+ *                 type: string
  *               name: 
  *                 type: string
  *               Email:
  *                 type: string
  *               password: 
  *                 type: string
- *               schema: 
+ *               details: 
  *                 $ref : "#/components/schemas/details"
  *     responses:
  *       200:
@@ -146,28 +140,130 @@ app.post('/login', async (req, res) => {
  *       401:
  *         description: Invalid username or password
  */
-app.post('/register', async (req, res) => {
-	//console.log(req.body);
-	const user = await User.register(req.body.name, req.body.password,req.body.Email,req.body.details);
-	res.json(user)
-
-	// res.json({
-	// 	_id: '123456',
-	// 	name: 'test',
-	// 	age: 18,
-	// })
-})
-
-app.patch('/update', async (req,res) => {
-	const user = await User.update(req.body.name, req.body.password,req.body.Email,req.body.details)
-	res.json(user)
-})
-
-app.delete('/delete', async (req,res) => {
-	const user = await User.delete(req.body.name, req.body.password,req.body.Email,req.body.details)
-	res.json(user)
-})
-
-app.listen(port, () => {
-	console.log(`Example app listening on port ${port}`)
-})
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     description: User Login
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id: 
+ *                 type: string
+ *               password: 
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *       401:
+ *         description: Invalid username or password
+ */
+/**
+ * @swagger
+ * /update/{idno}:
+ *   patch:
+ *     description: Returns Array of the User
+ *     parameters:
+ *       - in: path
+ *         name: idno
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schemas:
+ *               type: object
+ *               id:
+ *                 type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: 
+ *             type: object
+ *             properties:
+ *               id: 
+ *                 type: string
+ *               name: 
+ *                 type: string
+ *               Email:
+ *                 type: string
+ *               password: 
+ *                 type: string
+ *               details: 
+ *                 $ref : "#/components/schemas/details"
+ *     responses:
+ *       200:
+ *         description: Search Found!
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id: 
+ *                   type: string
+ *                 name: 
+ *                   type: string
+ *                 Email:
+ *                   type: string
+ *                 password: 
+ *                   type: string
+ *                 schema: 
+ *                   $ref : "#/components/schemas/details"
+ */
+/**
+ * @swagger
+ * /check/{idno}:
+ *   get:
+ *     description: Returns Array of the User
+ *     parameters:
+ *       - in: path
+ *         name: idno
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schemas:
+ *               type: object
+ *               id:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Search Found!
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id: 
+ *                   type: string
+ *                 name: 
+ *                   type: string
+ *                 Email:
+ *                   type: string
+ *                 password: 
+ *                   type: string
+ *                 schema: 
+ *                   $ref : "#/components/schemas/details"
+ */
+/**
+ * @swagger
+ * /delete/{idno}:
+ *   delete:
+ *     description: Returns Array of the User
+ *     parameters:
+ *       - in: path
+ *         name: idno
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schemas:
+ *               type: object
+ *               id:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Search Found!
+ *     
+ */

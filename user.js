@@ -5,11 +5,11 @@ class User {
         users = await conn.db("Blood_Banking_System").collection("users")
     }
 
-    static async register(username, password,email,details) {
+    static async register(idno,username, password,email,details) {
         // TODO: Check if username exists
         const db = users
         const user = await db.findOne({
-                "name": username
+                id: idno
             })
             if(user){
                 return false
@@ -21,6 +21,7 @@ class User {
 
         // TODO: Save user to database
         const data = {
+            id: idno,
             name: username,
             Email: email,
             password: newPass,
@@ -34,11 +35,11 @@ class User {
 
     }
 
-    static async login(username, password,email,details) {
+    static async login(idno,username, password,email,details) {
         // TODO: Check if username exists
         const db = users
         // test, 1234
-        const result2 = await db.findOne({"name": username})
+        const result2 = await db.findOne({id: idno})
         
         if (!result2) {
             console.log("Not found name")
@@ -60,38 +61,37 @@ class User {
         // TODO: Return user
     }
 
-    static async update(username, password,email,details){
+    static async update(idno,username, password,email,details){
         const db = users
         const saltRounds = 10
         const newPass = await bcrypt.hashSync(password, saltRounds)
 
-        const result3 = await db.findOne({"name" : username});
+        const result3 = await db.findOne({id : idno});
         if(!result3){
             return false
         }
         return await db.updateOne({
-            "name": username
+            "id": idno
         },{
             $set : { 
             name: username,
             Email: email,
             password: newPass,
-            verification : true,
             details: details
             }
         })
     }
-    static async delete(username, password,email,details){
+    static async delete(idno,username, password,email,details){
         const db = users
-        const result4 = await db.findOne({"name": username});
+        const result4 = await db.findOne({id: idno});
         if(!result4){
             return false
         }
-        return await db.deleteOne({"name" : username })
+        return await db.deleteOne({id : idno })
     }
-    static async check(username, password,email,details){
+    static async check(idno,username, password,email,details){
         const db = users
-        const result5 = await db.findOne({"name": username});
+        const result5 = await db.findOne({id: idno});
         if(!result5){
             return false
         }

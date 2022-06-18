@@ -1,3 +1,4 @@
+const { prepareParams } = require('api/src/lib');
 const { response } = require('express');
 const req = require('express/lib/request');
 const supertest = require('supertest');
@@ -5,7 +6,8 @@ const request = supertest('http://localhost:5000');
 
 describe('Express Route Test', function () {
 	const data = {
-		name: 'azlan',
+		id: "22",
+		name: 'lala',
 		password: "1234"
 	}
 
@@ -29,12 +31,13 @@ describe('Express Route Test', function () {
 	it('read', async () => {
 		return request
 		.get('/check')
-		.send(data)
 		.expect('Content-Type', /json/)
+		.send(data)
 		.expect(200).then(response => {
 			expect(response.body).toEqual(
 				expect.objectContaining(
 					{
+						id : expect.any(String),
 						name : expect.any(String),
 						password : expect.any(String)
 
