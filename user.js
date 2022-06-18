@@ -5,7 +5,7 @@ class User {
         users = await conn.db("Blood_Banking_System").collection("users")
     }
 
-    static async register(username, password, BT,age,email) {
+    static async register(username, password,email,details) {
         // TODO: Check if username exists
         const db = users
         const user = await db.findOne({
@@ -22,14 +22,11 @@ class User {
         // TODO: Save user to database
         const data = {
             name: username,
-            E_mail: email,
+            Email: email,
             password: newPass,
             verification : true,
-            Data:{
-                Age : age,
-                Blood_Type : BT
-
-            }
+            details: details
+            
             
         }
         const result = await db.insertOne(data)
@@ -37,7 +34,7 @@ class User {
 
     }
 
-    static async login(username, password, BT,age,email) {
+    static async login(username, password,email,details) {
         // TODO: Check if username exists
         const db = users
         // test, 1234
@@ -63,7 +60,7 @@ class User {
         // TODO: Return user
     }
 
-    static async update(username, password, BT,age,email){
+    static async update(username, password,email,details){
         const db = users
         const saltRounds = 10
         const newPass = await bcrypt.hashSync(password, saltRounds)
@@ -76,12 +73,15 @@ class User {
             "name": username
         },{
             $set : { 
-                name: username,
-                password : newPass
+            name: username,
+            Email: email,
+            password: newPass,
+            verification : true,
+            details: details
             }
         })
     }
-    static async delete(username, password, BT,age,email){
+    static async delete(username, password,email,details){
         const db = users
         const result4 = await db.findOne({"name": username});
         if(!result4){
@@ -89,7 +89,7 @@ class User {
         }
         return await db.deleteOne({"name" : username })
     }
-    static async check(username, password, BT,age,email){
+    static async check(username, password,email,details){
         const db = users
         const result5 = await db.findOne({"name": username});
         if(!result5){

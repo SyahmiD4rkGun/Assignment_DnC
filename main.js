@@ -3,7 +3,7 @@ const User = require("./user");
 
 MongoClient.connect(
 	// TODO: Connection 
-	"mongodb+srv://m001-student:m001-mongodb-basics@sandbox.98hil.mongodb.net/?retryWrites=true&w=majority",
+	"mongodb+srv://m001-student:m001-mongodb-basics@sandbox.98hil.mongodb.net/m201 people.json",
 	{ useNewUrlParser: true },
 ).catch(err => {
 	console.error(err.stack)
@@ -46,31 +46,49 @@ app.get('/', (req, res) => {
  * @swagger
  * components:
  *   schemas:
- *     Book:
- *       type: object
- *       required:
- *         - title
- *         - author
- *       properties:
- *         name:
- *           type: string
- *           description: The auto-generated id of the book
- *         title:
- *           type: string
- *           description: The book title
- *         author:
- *           type: string
- *           description: The book author
- *       example:
- *         id: d5fE_asz
- *         title: The New Turing Omnibus
- *         author: Alexander K. Dewdney
+ *     details:
+ *       type: array
+ *       items:
+ *         type: object
+ *         properties:
+ *           Age:
+ *             type: string
+ *           Blood_Type:
+ *             type: string
+ *        
  */
 
+/**
+ * @swagger
+ * /check/{username}:
+ *   get:
+ *     description: Returns Array of the User
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         schema:
+ *             type: string
+ *     responses:
+ *       200:
+ *         description: Search Found!
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name: 
+ *               type: string
+ *             Email:
+ *               type: string
+ *             password: 
+ *               type: string
+ *             schema: 
+ *               $ref : "#/components/schemas/details"
+ *       401:
+ *         description: Invalid username or password
+ */
 
-
-app.get('/check', async (req, res) => {
-	const user = await User.check(req.body.name,req.body.password)
+app.get('/check/:username', async (req, res) => {
+	const user = await User.check(req.body.name, req.body.password,req.body.Email,req.body.details)
 	res.json(user)
 })
 /**
@@ -85,17 +103,13 @@ app.get('/check', async (req, res) => {
  *           schema: 
  *             type: object
  *             properties:
- *               username: 
+ *               name: 
  *                 type: string
  *               password: 
  *                 type: string
  *     responses:
  *       200:
  *         description: Successful login
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
  *       401:
  *         description: Invalid username or password
  */
@@ -103,18 +117,38 @@ app.post('/login', async (req, res) => {
 	console.log(req.body);
 
 
-	const user = await User.login(req.body.name, req.body.password);
-	res.json(user)
-	// res.json({
-	// _id: '123456',
-	// name: 'test',
-	// 	age: 18
-	// })
+	const user = await User.login(req.body.name, req.body.password,req.body.Email,req.body.details);
+	res.status(200).send(user)
 })
-
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     description: Register
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: 
+ *             type: object
+ *             properties:
+ *               name: 
+ *                 type: string
+ *               Email:
+ *                 type: string
+ *               password: 
+ *                 type: string
+ *               schema: 
+ *                 $ref : "#/components/schemas/details"
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *       401:
+ *         description: Invalid username or password
+ */
 app.post('/register', async (req, res) => {
 	//console.log(req.body);
-	const user = await User.register(req.body.name, req.body.password);
+	const user = await User.register(req.body.name, req.body.password,req.body.Email,req.body.details);
 	res.json(user)
 
 	// res.json({
@@ -125,12 +159,12 @@ app.post('/register', async (req, res) => {
 })
 
 app.patch('/update', async (req,res) => {
-	const user = await User.update(req.body.name,req.body.password)
+	const user = await User.update(req.body.name, req.body.password,req.body.Email,req.body.details)
 	res.json(user)
 })
 
 app.delete('/delete', async (req,res) => {
-	const user = await User.delete(req.body.name,req.body.password)
+	const user = await User.delete(req.body.name, req.body.password,req.body.Email,req.body.details)
 	res.json(user)
 })
 
