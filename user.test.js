@@ -10,33 +10,41 @@ describe("Blood Bank System", () => {
 		);
 		User.injectDB(client);
 	})
-
+	const data = {
+		id: "22",
+		name: "syahmi",
+		password: "try99",
+		Email: "syahlol@gmail.com",
+		details: [
+			{Age: "29",
+			Blood_Type: "A"}
+		]
+	}
 	afterAll(async () => {
 		await client.close();
 	})
 
-	test("New user registration", async () => {
-		const res = await User.register("12","test", "1234","test123@",[{Age : "22",Blood_Type : "A"}])
+	test("Register New User", async () => {
+		const res = await User.register("22","syahmi","syah22","syahmi@gmail.com",[{Age:"22",Blood_Type:"A"}])
 		expect(res.acknowledged).toBe(true)
 	})
 
-	test("Duplicate username", async () => {
-		const res = await User.register("12","test", "1234","test123@",[{Age : "22",Blood_Type : "A"}])
+	test("User login", async () => {
+		const res = await User.login("22","syahmi","syah22","syahmi@gmail.com",[{Age:"22",Blood_Type:"A"}])
+		expect(res.status).toBe("verified")
+	})
+
+	test("User info update", async () => {
+		const res = await User.update("22","zul","syah22","syahmi@gmail.com",[{Age:"22",Blood_Type:"A"}])
 		expect(res.acknowledged).toBe(true)
 	})
 
-	test("User login invalid username", async () => {
-		const res = await User.login("12","test", "1234","test123@",[{Age : "22",Blood_Type : "A"}])
-		expect(res.name).toBe("test")
+	test("Find User data", async () => {
+		const res = await User.check("22","zul","syah22","syahmi@gmail.com",[{Age:"22",Blood_Type:"A"}])
+		expect(res.id).toBe("22")
 	})
-
-	test("User login invalid password", async () => {
-		const res = await User.login("12","test", "1234","test123@",[{Age : "22",Blood_Type : "A"}])
-		expect(res.verification).toBe(true)
-	})
-
-	test("User login successfully", async () => {
-		const res = await User.login("12","test", "1234","test123@",[{Age : "22",Blood_Type : "A"}])
-		expect(res.verification).toBe(true)
+	test("User delete", async () => {
+		const res = await User.delete("22","zul","syah22","syahmi@gmail.com",[{Age:"22",Blood_Type:"A"}])
+		expect(res.acknowledged).toBe(true)
 	})
 });

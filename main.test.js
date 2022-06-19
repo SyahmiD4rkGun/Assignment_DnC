@@ -1,17 +1,23 @@
 const { prepareParams } = require('api/src/lib');
 const { response } = require('express');
+const { param } = require('express/lib/request');
 const req = require('express/lib/request');
 const supertest = require('supertest');
 const request = supertest('http://localhost:5000');
 
 describe('Express Route Test', function () {
 	const data = {
-		id: "22",
-		name: 'lala',
-		password: "1234"
+		id: "1",
+		name: "sy",
+		password: "try99",
+		Email: "syahlol@gmail.com",
+		details: [
+			{Age: "29",
+			Blood_Type: "A"}
+		]
 	}
 
-	it('create', async () => {
+	it('register successfully', async () => {
 		return request
 			.post('/register')
 			.send(data)
@@ -28,53 +34,46 @@ describe('Express Route Test', function () {
 			});
 	});
 
-	it('read', async () => {
+	it('register failed', async () => {
 		return request
-		.get('/check')
+		.post('/register')
 		.expect('Content-Type', /json/)
 		.send(data)
-		.expect(200).then(response => {
+		.expect(401).then(response => {
 			expect(response.body).toEqual(
 				expect.objectContaining(
 					{
-						id : expect.any(String),
-						name : expect.any(String),
-						password : expect.any(String)
-
+						status: "error"
 					}
 				)
 			)
 		})
 	})
 
-	it('update', async () => {
+	it('login successful', async () => {
 		return request
-			.patch('/update')
+			.post('/login')
 			.send(data)
 			.expect('Content-Type', /json/)
 			.expect(200).then(response => {
-				expect(response.body).toEqual(
-					expect.objectContaining(
-						{
-							acknowledged : true
-	
-						}
-					)
-				);
+				expect(response.body).toEqual(true);
 			});
 
 	})
 
-	it('delete', async () => {
+	it('login failed', async () => {
 		return request
-			.delete('/delete')
-			.send(data)
+			.post('/login')
+			.send({
+				id: "1",
+				password:"lucky"
+			})
 			.expect('Content-Type', /json/)
-			.expect(200).then(response => {
+			.expect(401).then(response => {
 				expect(response.body).toEqual(
 					expect.objectContaining(
 						{
-							acknowledged : true
+							status: "error"
 	
 						}
 					)

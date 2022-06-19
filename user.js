@@ -54,7 +54,9 @@ class User {
                         return false
                     }
         console.log('Verified')
-        return true
+        return ({
+            status: "verified"
+        })
                     
                 
 
@@ -71,7 +73,7 @@ class User {
             return false
         }
         return await db.updateOne({
-            "id": idno
+            id: idno
         },{
             $set : { 
             name: username,
