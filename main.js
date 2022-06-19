@@ -38,6 +38,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 
+
 app.get('/', (req, res) => {
 	res.send('Hello World')
 })
@@ -55,7 +56,14 @@ app.post('/login', async (req, res) => {
 
 
 	const user = await User.login(req.body.id,req.body.name, req.body.password,req.body.Email,req.body.details);
-	res.status(200).send(user)
+	res.status(200).json({
+		id: user.id,
+		name: user.username,
+		token: generateAccessToken({
+			id: user.id,
+			Email: user.Email 
+		})
+	});
 })
 
 app.post('/register', async (req, res) => {
@@ -267,3 +275,41 @@ app.listen(port, () => {
  *         description: Search Found!
  *     
  */
+
+
+//  app.get('/visitor/:id', async (req, res) => {
+// 	console.log(req.user);
+
+// 	if(req.user.role == 'user') {
+// 		let visitor = await Visitor.getVisitor(req.params.id);
+
+// 		if (visitor)
+// 			res.status(200).json(visitor)
+// 		else
+// 			res.status(404).send("Invalid Visitor Id");
+// 	} else {
+// 		res.status(403).send('Unauthorized')
+// 	}
+
+// })
+ const jwt = require('jsonwebtoken');
+ function generateAccessToken(payload) {
+	 return jwt.sign(payload, "my-super-secret", { expiresIn: '60s' });
+ }
+ app.use(verifyToken);
+ function verifyToken(req, res, next) {
+	 const authHeader = req.headers['authorization']
+	 const token = authHeader && authHeader.split(' ')[1]
+ 
+	 if (token == null) return res.sendStatus(401)
+ 
+	 jwt.verify(token, "my-super-secret", (err, user) => {
+		 console.log(err)
+ 
+		 if (err) return res.sendStatus(403)
+ 
+		 req.user = user
+ 
+		 next()
+	 })
+ }

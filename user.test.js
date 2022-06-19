@@ -16,27 +16,27 @@ describe("Blood Bank System", () => {
 	})
 
 	test("New user registration", async () => {
-		const res = await User.register("test", "1234","syahmij")
+		const res = await User.register("12","test", "1234","test123@",[{Age : "22",Blood_Type : "A"}])
 		expect(res.acknowledged).toBe(true)
 	})
 
 	test("Duplicate username", async () => {
-		const res = await User.register("test", "1234","syahmij")
+		const res = await User.register("12","test", "1234","test123@",[{Age : "22",Blood_Type : "A"}])
 		expect(res.acknowledged).toBe(true)
 	})
 
 	test("User login invalid username", async () => {
-		const res = await User.login("test", "1234","syahmij")
+		const res = await User.login("12","test", "1234","test123@",[{Age : "22",Blood_Type : "A"}])
 		expect(res.name).toBe("test")
 	})
 
 	test("User login invalid password", async () => {
-		const res = await User.login("test", "1234","syahmij")
+		const res = await User.login("12","test", "1234","test123@",[{Age : "22",Blood_Type : "A"}])
 		expect(res.verification).toBe(true)
 	})
 
 	test("User login successfully", async () => {
-		const res = await User.login("test", "1234","syahmij")
+		const res = await User.login("12","test", "1234","test123@",[{Age : "22",Blood_Type : "A"}])
 		expect(res.verification).toBe(true)
 	})
 });
